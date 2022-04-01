@@ -1,12 +1,36 @@
 import os
+import sys
 import subprocess
 import time
 from wordpress.wordpress_install import get_info, wp_setup
 from wordpress.wordpress_tasks import wordpress_db_mod, task_run
 import requests
+
+checking_version = f'{sys.version_info.major}.{sys.version_info.minor}'
+
+if checking_version == '3.6' or checking_version > '3.5.9' :
+    print(f'Running Python version is {checking_version}')
+else:
+    print(f'This script will not work on Python {checking_version}, please update before running')
+    exit()
+
 print('============================================\nWordPress Install Script\n============================================')
 
 site_name, database_name, user_name, database_host, db_pass = get_info()
+
+try:
+
+    cnx = mysql.connector.connect(user=user_name, password=db_pass, host=database_host, database=database_name)
+
+except mysql.connector.Error as err:
+  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+    print("Something is wrong with your user name or password")
+  elif err.errno == errorcode.ER_BAD_DB_ERROR:
+    print("Database does not exist")
+  else:
+    print(err)
+else:
+  cnx.close()
 
 print(f'Installing latest WordPress on {site_name}, the database is {database_name}, user {user_name} with the password provided above')
 checks = False
