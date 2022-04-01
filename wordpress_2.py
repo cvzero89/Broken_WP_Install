@@ -18,19 +18,20 @@ print('============================================\nWordPress Install Script\n=
 
 site_name, database_name, user_name, database_host, db_pass = get_info()
 
-try:
+## Needs MySQL module:
+#try:
 
-    cnx = mysql.connector.connect(user=user_name, password=db_pass, host=database_host, database=database_name)
+#    cnx = mysql.connector.connect(user=user_name, password=db_pass, host=database_host, database=database_name)
 
-except mysql.connector.Error as err:
-  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-    print("Something is wrong with your user name or password")
-  elif err.errno == errorcode.ER_BAD_DB_ERROR:
-    print("Database does not exist")
-  else:
-    print(err)
-else:
-  cnx.close()
+#except mysql.connector.Error as err:
+#  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+#    print("Something is wrong with your user name or password")
+#  elif err.errno == errorcode.ER_BAD_DB_ERROR:
+#    print("Database does not exist")
+#  else:
+#    print(err)
+#else:
+#  cnx.close()
 
 print(f'Installing latest WordPress on {site_name}, the database is {database_name}, user {user_name} with the password provided above')
 checks = False
