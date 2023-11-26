@@ -138,6 +138,7 @@ def move_payload(start_path, mode):
 			zObject.extractall(f'{assets_path}/')
 		if not os.path.exists(fake_wp_cli_path):
 			shutil.copy(f'{assets_path}/wp-dummy', f'{home_dir}/.wp-dummy/')
+		os.chmod(f'{home_dir}/.wp-dummy/wp-dummy', 0o740)
 		
 		## - True if alias is already on the file.
 		def check_file(alias, bash_path):
