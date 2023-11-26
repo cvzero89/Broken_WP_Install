@@ -1,0 +1,16 @@
+.body {
+	font-family: Arial, sans-serif; /* Setting the font to Arial */
+	background-color: #f0f0f0; /* Light grey background color */
+	color: #333333; /* Dark grey text color */
+	margin: 0;
+	padding: 20px;
+  }
+  
+  .header {
+	font-family: 'Times New Roman', serif; /* Setting the font to Times New Roman */
+	background-color: #0044cc; /* Dark blue background color */
+	color: white; /* White text color */
+	padding: 10px 20px;
+	text-align: center;
+	border-bottom: 2px solid #003399; /* Darker blue border at the bottom */
+  }
