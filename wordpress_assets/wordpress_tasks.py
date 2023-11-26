@@ -2,6 +2,7 @@ import os
 import random
 import string
 import shutil
+from zipfile import ZipFile 
 
 def generate_random_sequence(length=6, interpolate=''):
     """
@@ -132,9 +133,11 @@ def move_payload(start_path, mode):
 			os.mkdir(f'{home_dir}/.wp-dummy/')
 		except OSError as error:
 			...
-
+		assets_path = f'{start_path}/wordpress_assets'
+		with ZipFile(f'{assets_path}/wp-dummy.zip', 'r') as zObject:
+			zObject.extractall(f'{assets_path}/')
 		if not os.path.exists(fake_wp_cli_path):
-			shutil.copy(f'{start_path}/wordpress_assets/wp-dummy', f'{home_dir}/.wp-dummy/')
+			shutil.copy(f'{assets_path}/wp-dummy', f'{home_dir}/.wp-dummy/')
 		
 		## - True if alias is already on the file.
 		def check_file(alias, bash_path):
