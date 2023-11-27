@@ -153,6 +153,13 @@ def move_payload(start_path, mode):
 				bash_file.write(f'{alias}\n')
 	elif mode == 'reset':
 		print('Resetting changes to files...')
+		directory = os.getcwd()
+		directory_list = directory.split('/')
+		if len(directory_list) > 3:
+			os.chdir('/'.join(directory_list[:4]))
+		elif len(directory_list) <= 2:
+			print(f'This script cannot be run on the user directory or lower. Current path is {os.getcwd()}\nBye!')
+			exit()
 		# Read the file and store lines
 		with open(bash_path, 'r') as file:
 			lines = file.readlines()
@@ -168,4 +175,22 @@ def move_payload(start_path, mode):
 			shutil.rmtree(f'{home_dir}/.wp-dummy/')
 		except Exception as e:
 			print(e)
+
+		def remove_wp_directories_and_php_files():
+		    # Directories to remove
+		    directories_to_remove = ['wp-admin', 'wp-includes']
+		
+		    # Remove the specified directories
+		    for directory in directories_to_remove:
+		        if os.path.exists(directory) and os.path.isdir(directory):
+		            shutil.rmtree(directory)
+		            print(f"Removed directory: {directory}")
+		        else:
+		            print(f"Directory not found: {directory}")
+		
+		    # Remove all PHP files in the current directory
+		    for file in os.listdir('.'):
+		        if file.endswith('.php'):
+		            os.remove(file)
+		remove_wp_directories_and_php_files()
 		print('Done.')
