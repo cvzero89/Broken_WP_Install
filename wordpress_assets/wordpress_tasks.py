@@ -39,7 +39,7 @@ def wordpress_db_mod(site):
 
 	mod_db_host = 'mysql' + generate_random_sequence(3) + '.' + site.site_name
 	mod_db_pass = generate_random_sequence(3, site.db_pass)
-	mod_table_prefix = 'wp_' + generate_random_sequence(6)
+	mod_table_prefix = 'wp_' + generate_random_sequence(4)
 	site.run_command(['wp', 'config', 'set', 'DB_HOST', mod_db_host])
 	site.run_command(['wp', 'config', 'set', 'DB_PASSWORD', mod_db_pass])
 	site.run_command(['wp', 'config', 'set', 'table_prefix', mod_table_prefix])
@@ -177,20 +177,19 @@ def move_payload(start_path, mode):
 			print(e)
 
 		def remove_wp_directories_and_php_files():
-		    # Directories to remove
-		    directories_to_remove = ['wp-admin', 'wp-includes']
-		
-		    # Remove the specified directories
-		    for directory in directories_to_remove:
-		        if os.path.exists(directory) and os.path.isdir(directory):
-		            shutil.rmtree(directory)
-		            print(f"Removed directory: {directory}")
-		        else:
-		            print(f"Directory not found: {directory}")
+			# Directories to remove
+			directories_to_remove = ['wp-admin', 'wp-includes']
+			# Remove the specified directories
+			for directory in directories_to_remove:
+				if os.path.exists(directory) and os.path.isdir(directory):
+					shutil.rmtree(directory)
+					print(f"Removed directory: {directory}")
+				else:
+					print(f"Directory not found: {directory}")
 		
 		    # Remove all PHP files in the current directory
-		    for file in os.listdir('.'):
-		        if file.endswith('.php'):
-		            os.remove(file)
+			for file in os.listdir('.'):
+				if file.endswith('.php'):
+					os.remove(file)
 		remove_wp_directories_and_php_files()
 		print('Done.')

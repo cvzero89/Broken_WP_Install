@@ -7,8 +7,15 @@ class WordPress_Site():
 	"""
 	Setting up a class to handle all info, commands in a better way.
 	"""
-	def __init__(self):
-		print('WordPress Installer...')
+	def __init__(self, mode):
+		self.mode = mode.lower()
+		if self.mode == 'install':
+			print('WordPress Installer...')
+		elif self.mode == 'run':
+			print('WordPress install skipped...')
+		else:
+			print('Unknown mode.')
+			exit()
 	
 	"""
 	If the script is executed from a subfolder it will move to the home directory.
@@ -34,6 +41,8 @@ class WordPress_Site():
 	"""
 	def run_command(self, cmd):
 		try:
+			if 'import' not in cmd:
+				cmd.extend(['--skip-plugins', '--skip-themes'])
 			process = subprocess.run(cmd, capture_output=True, text=True, check=True, encoding='utf-8')
 			return process.stdout.strip()
 		except subprocess.CalledProcessError as e:
@@ -46,14 +55,21 @@ class WordPress_Site():
 	Password is not shown in console.
 	"""
 	def get_info(self):
-		try:
-			self.site_name = input('Enter the domain name: ').replace('http://', '').replace('https://', '')
-			self.database_name = input('Enter the database name: ')
-			self.user_name = input('Enter the database usermame: ')
-			self.database_host = input('Enter the database hostname: ')
-			self.db_pass = getpass.getpass('Enter the database password: ')
-		except KeyboardInterrupt:
-			print('Action cancelled.')
+		if self.mode == 'install':
+			try:
+				self.site_name = input('Enter the domain name: ').replace('http://', '').replace('https://', '')
+				self.database_name = input('Enter the database name: ')
+				self.user_name = input('Enter the database usermame: ')
+				self.database_host = input('Enter the database hostname: ')
+				self.db_pass = getpass.getpass('Enter the database password: ')
+			except KeyboardInterrupt:
+				print('Action cancelled.')
+		elif self.mode == 'run':
+			self.site_name = self.run_command(['wp', 'option', 'get', 'siteurl']).replace('http://', '').replace('https://', '')
+			self.database_name = self.run_command(['wp', 'config', 'get', 'DB_NAME'])
+			self.user_name = self.run_command(['wp', 'config', 'get', 'DB_USER'])
+			self.database_host = self.run_command(['wp', 'config', 'get', 'DB_HOST'])
+			self.db_pass = self.run_command(['wp', 'config', 'get', 'DB_PASSWORD'])
 	
 	"""
 	WordPress downloader, creates config file and setups the automatic install.

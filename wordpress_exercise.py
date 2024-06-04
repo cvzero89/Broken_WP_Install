@@ -1,9 +1,9 @@
 import os
 import time
-from wordpress_assets.wordpress_install import WordPress_Site
-from wordpress_assets.wordpress_tasks import task_run, move_payload
 import requests
 import argparse
+from wordpress_assets.wordpress_install import WordPress_Site
+from wordpress_assets.wordpress_tasks import task_run, move_payload
 
 def install(site):
     start = 'WPS Test #1'
@@ -59,19 +59,21 @@ def install(site):
 
 
 def main():
-    parser =  argparse.ArgumentParser(description='Setting up WP for training exercises.')
-    parser.add_argument('--installer', help='Installs and sets up WP.', action='store_true')
-    parser.add_argument('--reset', help='Resets the environment.', action='store_true')
+    parser = argparse.ArgumentParser(
+                        prog='Broken WP Install',
+                        description='Sets up a broken WordPress instance to be used for debug/training.',
+                        epilog='What are you looking at? I am a short help article.')
+    parser.add_argument('--mode', type=str, nargs=1, required=True, default='install', choices=['install', 'run', 'reset'])
     args = parser.parse_args()
-    installer = args.installer
-    reset = args.reset
+    mode = args.mode[0].lower()
+
     """
     start_path is needed to reference the assets to call the move_payload() function.
     It fixes the problem that may arise if the script is not executed on the root directory.
     """
     start_path = os.getcwd()
-    if installer:
-        site = WordPress_Site()
+    if mode == 'install':
+        site = WordPress_Site(mode)
         site.folder_check()
         site.get_info()
         install(site)
@@ -83,14 +85,27 @@ def main():
         """
 
         if error_check >= 1:
-            print('There were some errors during the setup. DM @carlosv over Slack ')
+            print('There were some errors during the setup. DM your trainer over Slack.')
         else:
             move_payload(start_path, 'installer')
-            print('Done. Start working. Any questions DM @carlosv over Slack ')
-    elif reset:
+            print('Done. Start working. Any questions DM your trainer over Slack.')
+    elif mode == 'reset':
         move_payload(start_path, 'reset')
+    elif mode == 'run':
+        site = WordPress_Site(mode)
+        site.folder_check()
+        site.get_info()
+        site_title = '\"WPS Custom Page.\"'
+        site_post = '\"Hey! Look at me I am a page! Please help me get to this state once I am broken.\"'
+        site.create_wp_post(site_title, site_post)
+        error_check = task_run(site, start_path)
+        if error_check >= 1:
+            print('There were some errors during the setup. DM @carlosv over Slack.')
+        else:
+            move_payload(start_path, 'installer')
+            print('Done. Start working. Any questions DM your trainer over Slack.')
     else:
-        print('No argument provided: Use --installer or --reset. For more info use -h.')
+        print('No argument provided: Use --mode install, --mode reset or --mode run. For more info use -h.')
 
 
 if __name__ == "__main__":
