@@ -71,7 +71,12 @@ def main():
     start_path is needed to reference the assets to call the move_payload() function.
     It fixes the problem that may arise if the script is not executed on the root directory.
     """
-    start_path = os.path.abspath(os.path.dirname(__file__))
+    start_path_list = os.path.abspath(os.path.dirname(__file__)).split('/')
+    if 'wordpress_assets' in start_path_list:
+        start_path_list.remove('wordpress_assets')
+        start_path = '/'.join(start_path_list)
+    else:
+        start_path = '/'.join(start_path_list)
     if mode == 'install':
         site = WordPress_Site(mode)
         site.folder_check()
